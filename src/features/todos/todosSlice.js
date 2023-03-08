@@ -16,13 +16,17 @@ const todosSlice = createSlice({
       const newTodo = {
         id: new Date().getTime(),
         title: action.payload.title,
-        isCompleted: false,
+        completed: false,
       };
 
       state.todos.push(newTodo);
     },
+    toggleTodos: (state, action) => {
+      const selectedTodo = state.todos.find((t) => t.id === action.payload.id);
+      selectedTodo.completed = !selectedTodo.completed;
+    },
   },
 });
 
-export const { addTodo } = todosSlice.actions;
+export const { addTodo, toggleTodos } = todosSlice.actions;
 export default todosSlice.reducer;
