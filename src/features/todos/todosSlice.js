@@ -45,6 +45,18 @@ export const toggleAsyncTodos = createAsyncThunk(
   }
 );
 
+export const deleteAsyncTodos = createAsyncThunk(
+  "todos/deleteAsyncTodos",
+  async (payload, { rejectWithValue }) => {
+    try {
+      await axios.delete(`http://localhost:3001/todos/${payload.id}`);
+      return { id: payload.id };
+    } catch (error) {
+      throw rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   todos: [],
   error: null,
@@ -91,6 +103,12 @@ const todosSlice = createSlice({
     [toggleAsyncTodos.fulfilled]: (state, action) => {
       const selectedTodo = state.todos.find((t) => t.id === action.payload.id);
       selectedTodo.completed = action.payload.completed;
+    },
+    [deleteAsyncTodos.fulfilled]: (state, action) => {
+      const filteredTodos = state.todos.filter(
+        (t) => t.id !== action.payload.id
+      );
+      state.todos = filteredTodos;
     },
   },
 });
